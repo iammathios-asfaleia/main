@@ -54,9 +54,10 @@ public class SomeClass {
         return (digest1.equals(digest2) ? true : false);
     }
 
+    // returns a String(a digest) that gets generated when hashing(SHA-256) a password with a salt
     public static String generateDigest(String password, String salt) {
-        return SomeClass.toHexString(SomeClass.getSHA256(password, salt));
 
+        return SomeClass.toHexString(SomeClass.getSHA256(password, salt));
     }
 
     public static void main(String[] args){
