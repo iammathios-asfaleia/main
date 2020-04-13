@@ -5,34 +5,43 @@ import java.security.NoSuchAlgorithmException;
 
 public class Generate_Symmetric_Key {
 
-    private Cipher aescipher;
-    private byte[] aeskey;
-    private SecretKeySpec aeskeySpec;
-
-    public void createSymmetricalKey() throws NoSuchAlgorithmException
-    {
+    // Δημιουργια συμμετρικου κλειδιου
+    public static SecretKey createSymmetricalKey() {
         KeyGenerator keyGenerator;
-        keyGenerator = KeyGenerator.getInstance("AES");
-        keyGenerator.init(256);
-        SecretKey secretKey = keyGenerator.generateKey();
-        aeskey = secretKey.getEncoded();
-        aeskeySpec = new SecretKeySpec(aeskey,"AES");
+        try {
+            keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(256);
+            SecretKey secretKey = keyGenerator.generateKey();
+            byte[] aeskey = secretKey.getEncoded();
+            SecretKey secret_key = new SecretKeySpec(aeskey, "AES");
+            return secret_key;
+        }catch (NoSuchAlgorithmException ex){
+            ex.printStackTrace();
+        }
+        return null;
     }
 
-    public byte[] encrypt(byte[] value) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException,
-            NoSuchPaddingException, NoSuchAlgorithmException {
-
-        aescipher = Cipher.getInstance("AES");
-        aescipher.init(Cipher.ENCRYPT_MODE,aeskeySpec);
-        return aescipher.doFinal(value);
+    public static byte[] encrypt(byte[] value,SecretKey secret_key) {
+        try{
+            Cipher aescipher = Cipher.getInstance("AES");;
+            aescipher.init(Cipher.ENCRYPT_MODE,secret_key);
+            return aescipher.doFinal(value);
+        }catch (InvalidKeyException|BadPaddingException|IllegalBlockSizeException|NoSuchPaddingException|NoSuchAlgorithmException exception){
+            exception.printStackTrace();
+        }
+        return null;
     }
 
-    public byte[] decrypt(byte[] encryption_value) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException,
-            NoSuchPaddingException, NoSuchAlgorithmException {
+    public static byte[] decrypt(byte[] encryption_value,SecretKey secret_key) {
 
-        aescipher = Cipher.getInstance("AES");
-        aescipher.init(Cipher.DECRYPT_MODE,aeskeySpec);
-        return aescipher.doFinal(encryption_value);
+        try{
+            Cipher aescipher = Cipher.getInstance("AES");
+            aescipher.init(Cipher.DECRYPT_MODE,secret_key);
+            return aescipher.doFinal(encryption_value);
+        }catch (InvalidKeyException|BadPaddingException|IllegalBlockSizeException|NoSuchPaddingException|NoSuchAlgorithmException exception){
+            exception.printStackTrace();
+        }
+        return null;
     }
 
 }
