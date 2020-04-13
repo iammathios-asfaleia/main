@@ -54,6 +54,11 @@ public class SomeClass {
         return (digest1.equals(digest2) ? true : false);
     }
 
+    public static String generateDigest(String password, String salt) {
+        return SomeClass.toHexString(SomeClass.getSHA256(password, salt));
+
+    }
+
     public static void main(String[] args){
 
         System.out.println("Hii \n");
@@ -62,7 +67,8 @@ public class SomeClass {
         String password1 = "safe123";
         String password2 = "ipourgos321";
 
-        String digest1 = SomeClass.toHexString(SomeClass.getSHA256(password1, salt));
+        //String digest1 = SomeClass.toHexString(SomeClass.getSHA256(password1, salt));
+        String digest1 = SomeClass.generateDigest(password1, salt);
         String digest2 = SomeClass.toHexString(SomeClass.getSHA256(password2, salt));
 
         System.out.println("Hash password1 : " + digest1 );
