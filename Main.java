@@ -1,5 +1,8 @@
 
 import javax.crypto.SecretKey;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 
 public class Main {
@@ -14,15 +17,11 @@ public class Main {
 //
         //System.out.println("After the decryption: " + new String (Generate_Symmetric_Key.decrypt(crypto_value,key)));
 
-        User user1 = new User("Babis");
-        User user2 = new User("Babis");
-        User user3 = new User("Kostas");
-        User user4 = new User("Anna");
+//
+        //String digest = GenerateDigest.generateDigest(user1.getPassword(), user1.getSalt());
+        //System.out.println(digest);
 
-        Login_Register.register(user1);
-        Login_Register.register(user3);
-        Login_Register.register(user2);
-        Login_Register.register(user4);
-        Login_Register.file();
+        User user1 = new User("Dennis","Jo","Dionisis","123","d@gmail.com");
+        System.out.println(user1.toString());
     }
 }

@@ -1,22 +1,12 @@
-/*
-* Icsd14130 Ματθαίος Μπεγκβάρφαϊ
-*/
-package bankcardwallet;
-
-/**
- *
- * @author Matthaios
- */
 
 import java.io.*;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import java.security.*;
-import java.util.Base64;
 import java.util.logging.*;
 import javax.crypto.*;
 
-public class AssymetricKeyGenerator {
-    
+public final class AssymetricKeyGenerator {
+
+    //-----------------------------------------------------PAIR_KEY-----------------------------------------------------
     public static KeyPair getKeyPair(){
         
         try {
@@ -33,7 +23,6 @@ public class AssymetricKeyGenerator {
             System.out.println(ex.getLocalizedMessage());
         }
         return null;
-        
     }
     
     
@@ -42,7 +31,6 @@ public class AssymetricKeyGenerator {
     public static byte[] encryptWithPublic(Object plainText, PublicKey publicKey){
         
         try {
-            
             //encryption set up
             Cipher encryptCipher = Cipher.getInstance("RSA");
             encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
