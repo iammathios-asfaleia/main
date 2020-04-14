@@ -1,4 +1,12 @@
+/*
+ * Icsd14130 Ματθαίος Μπεγκβάρφαϊ
+ */
+package testregister;
+
 import java.io.*;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Login_Register {
 
@@ -12,7 +20,7 @@ public class Login_Register {
             // Check if the file already exists
             if(register_file.exists()){
                 // Check if the username exists into the file (if no->append->write) (if yes->system.out.println)
-                if(checkUsernameExists(user.getUsername()) == false)
+                if(checkUsernameExists(user) == false)
                 {
                     // Append file because header already written
                     File_out = new FileOutputStream(register_file,true);
@@ -21,6 +29,7 @@ public class Login_Register {
                         public void writeStreamHeader() {
                         }
                     };
+                    Object_out.writeObject(user);
                 }else{
                     System.out.println(user.getUsername() + " Can't register!");
                 }
@@ -29,38 +38,46 @@ public class Login_Register {
                 File_out = new FileOutputStream(register_file);
                 Object_out = new ObjectOutputStream(File_out);
                 System.out.println("1st time in!");
+                Object_out.writeObject(user);
             }
-            Object_out.writeObject(user);
+            
 
+            
+            Object_out.flush();
+            Object_out.close();
+            File_out.flush();
+            File_out.close();
+            
         }catch (FileNotFoundException ex){
             ex.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            try{
-                Object_out.flush();
-                Object_out.close();
-                File_out.flush();
-                File_out.close();
-            }catch (IOException e){
-                e.printStackTrace();
-            }
         }
     }
 
-    public static void file(){
-
+    public static ArrayList<User> file(){
+        
+        ArrayList<User> storedUsers=new ArrayList<User>();
+        
         try{
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Register_Users"));
+            
+            
+            User tempUser = (User) ois.readObject();
+            System.out.println("Username is : " + tempUser.getUsername());
+            
+            try{
+            while(tempUser!=null){
+                tempUser=(User)ois.readObject();
+                System.out.println("Username is : " + tempUser.getUsername());
+                storedUsers.add(tempUser);
+            }
+            
+            }catch(EOFException eof){
+                
+            }
 
-                while (true){
-                    try {
-                        User tempUser = (User) ois.readObject();
-                        System.out.println("Username is : " + tempUser.getUsername());
-
-                    }catch (EOFException ex){ System.out.println("eof"); break;
-                    }
-                }
+                
 
         } catch (FileNotFoundException exception) {
             exception.printStackTrace();
@@ -69,33 +86,19 @@ public class Login_Register {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        
+        return storedUsers;
     }
 
     // Check if username already exists
-    public static boolean checkUsernameExists(String username){
-
-        boolean username_found = false;
-        try{
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Register_Users"));
-            while (true){
-                try{
-                    // Read object from file
-                    User user_temp = (User) ois.readObject();
-                    if(user_temp.getUsername().equals(username)) {
-                        username_found = true;
-                        break;
-                    }
-                }catch (ClassNotFoundException ex){
-                    ex.printStackTrace();
-                }catch (EOFException ex){
-                    if(username_found==false) System.out.println("Scanning-> Username not found");
-                    else System.out.println("Scanning-> Username exists"); break;
-                }
-            }
-        }catch (IOException ex){
-            ex.printStackTrace();
+    public static boolean checkUsernameExists(User user){
+        
+        ArrayList<User> storedUsers=file();
+        
+        if(file()!=null){
+            return storedUsers.contains(user);//exists or not
         }
-        return username_found;
+        return false;//file empty
     }
 
     public static void login(){
