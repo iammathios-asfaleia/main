@@ -1,22 +1,28 @@
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.SecretKey;
+
 
 public class Main {
-    public static void main(String[] args) throws NoSuchAlgorithmException,
-            BadPaddingException, InvalidKeyException, IllegalBlockSizeException, NoSuchPaddingException {
+    public static void main(String[] args) {
 
-        String value = "Hello world";
-        Generate_Symmetric_Key crypto_text = new Generate_Symmetric_Key();
-        crypto_text.createSymmetricalKey();
+        //String value = "Hello world";
+        //SecretKey key = Generate_Symmetric_Key.createSymmetricalKey();
+//
+        //System.out.println("The text value: " + value);
+        //byte[] crypto_value = Generate_Symmetric_Key.encrypt(value.getBytes(),key);
+        //System.out.println("The encrypted: " + crypto_value);
+//
+        //System.out.println("After the decryption: " + new String (Generate_Symmetric_Key.decrypt(crypto_value,key)));
 
-        System.out.println("The text value: " + value);
-        byte[] crypto_value = crypto_text.encrypt(value.getBytes());
-        System.out.println("The encrypted: " + crypto_value);
+        User user1 = new User("Babis");
+        User user2 = new User("Babis");
+        User user3 = new User("Kostas");
+        User user4 = new User("Anna");
 
-        System.out.println("After the decryption: " + new String (crypto_text.decrypt(crypto_value)));
-
+        Login_Register.register(user1);
+        Login_Register.register(user3);
+        Login_Register.register(user2);
+        Login_Register.register(user4);
+        Login_Register.file();
     }
 }
