@@ -4,7 +4,7 @@ import java.io.*;
 public class Login_Register {
 
     //=====================================REGISTER=============================================================//
-    public static void register(User user){
+    public static void register(User user, String password){
         File register_file = new File("Register_Users");
         ObjectOutputStream Object_out = null;
         FileOutputStream File_out = null;
@@ -23,7 +23,8 @@ public class Login_Register {
                         }
                     };
 
-                    Object_out.writeObject(KeyHandler.readyForRegister(user));
+                    user.setDigest(GenerateDigest.generateDigest(password,user.getSalt()));// Give digest to the next register user
+                    Object_out.writeObject(KeyHandler.finalizeUserAttributes(user)); // Write user to file
                 }else{
                     System.out.println(user.getUsername() + " Can't register!");
                 }
@@ -31,7 +32,9 @@ public class Login_Register {
             }else{
                 File_out = new FileOutputStream(register_file);
                 Object_out = new ObjectOutputStream(File_out);
-                Object_out.writeObject(KeyHandler.readyForRegister(user));
+
+                user.setDigest(GenerateDigest.generateDigest(password,user.getSalt())); // Give digest to the first register user
+                Object_out.writeObject(KeyHandler.finalizeUserAttributes(user)); // Write user to file for the first time
                 System.out.println("1st time in!");
             }
 
@@ -55,8 +58,41 @@ public class Login_Register {
 
 
     //=====================================LOGIN=============================================================//
-    public static void login(String username, String password){
+    public static boolean login(String password){
 
+        boolean resultDigests = false;
+        try{
+            ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream("Register_Users"));
+
+            while (true){
+                try{
+                    User tempUser = (User) objectIn.readObject();
+
+                    String tempUserDigest = tempUser.getDigest();
+                    String newLoginDigest = GenerateDigest.generateDigest(password,tempUser.getSalt());
+
+                    resultDigests = GenerateDigest.digestEquality(tempUserDigest, newLoginDigest);
+
+                    if(resultDigests==true){
+                        System.out.println("Login success!");
+                        return true;
+                    }
+                }catch (EOFException ex){
+                    if(resultDigests == false){
+                        System.out.println("Login failed!");
+                        return false;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (FileNotFoundException exception) {
+            exception.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     //=====================================CHECK_USERNAME_IF_EXISTS=============================================================//
@@ -95,7 +131,7 @@ public class Login_Register {
             while (true){
                 try {
                     User tempUser = (User) ois.readObject();
-                    System.out.println("Username is : " + tempUser.getUsername());
+                    System.out.println("Username is : " + tempUser.toString());
 
                 }catch (EOFException ex){ System.out.println("eof"); break;
                 }

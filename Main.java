@@ -1,27 +1,17 @@
 
-import javax.crypto.SecretKey;
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-
-
 public class Main {
     public static void main(String[] args) {
 
-        //String value = "Hello world";
-        //SecretKey key = Generate_Symmetric_Key.createSymmetricalKey();
-//
-        //System.out.println("The text value: " + value);
-        //byte[] crypto_value = Generate_Symmetric_Key.encrypt(value.getBytes(),key);
-        //System.out.println("The encrypted: " + crypto_value);
-//
-        //System.out.println("After the decryption: " + new String (Generate_Symmetric_Key.decrypt(crypto_value,key)));
+        User user1 = new User("dennis","Jo","dionisis","email@gmail.com");
+        User user2 = new User("John","Ske","giannis","email1@gmail.com");
 
-//
-        //String digest = GenerateDigest.generateDigest(user1.getPassword(), user1.getSalt());
-        //System.out.println(digest);
+        Login_Register.register(user1,"123");
+        Login_Register.register(user2,"321");
 
-        User user1 = new User("Dennis","Jo","Dionisis","123","d@gmail.com");
-        System.out.println(user1.toString());
+        Login_Register.file();
+
+        boolean login1 = Login_Register.login("456");
+        boolean login2 = Login_Register.login("321");
+
     }
 }

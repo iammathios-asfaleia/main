@@ -4,6 +4,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import java.io.*;
 import java.security.*;
+import java.util.PrimitiveIterator;
 
 public class KeyHandler {
 
@@ -90,30 +91,27 @@ public class KeyHandler {
         return null;
     }
 
-    //======================CREATE_USER_READY_FOR_REGISTER + SYMMETRIC_KEY======================//
-    public static User readyForRegister(User user){
+    //======================FINALIZE_USER_TO_WRITE_TO_FILE======================//
+    public static User finalizeUserAttributes(User user){
 
-        // Get secret key
-        SecretKey userSecretKey = Generate_Symmetric_Key.createSymmetricalKey();
-        // Get App public key
-        PublicKey publicKey = KeyHandler.getAppPublicKey();
+        SecretKey userSecretKey = Generate_Symmetric_Key.createSymmetricalKey(); // Get secret key
+        PublicKey publicKey = KeyHandler.getAppPublicKey();// Get App public key
 
-        try{
-            Cipher encryptedSymmetric = Cipher.getInstance("RSA");
-            encryptedSymmetric.init(Cipher.WRAP_MODE,publicKey);
-            byte[] wrapped = encryptedSymmetric.wrap(userSecretKey);
+        byte[] encryptedSymmetric = AssymetricKeyGenerator.encryptWithPublic(userSecretKey,publicKey);
+        user.setEncryptedSymmetric(encryptedSymmetric);
 
-            user.setEncryptedSymmetric(wrapped);
-
-            return user;
-
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return user;
     }
+
+    //======================DECRYPT_SYMMETRIC_USER_KEY======================//
+    public static SecretKey userDecryptSecretKey(User user){
+
+        PrivateKey privateKey = KeyHandler.getAppPrivateKey(); // Get app private key
+        byte[] encryptSymmetric = user.getEncryptedSymmetric(); // Get encrypt symmetric user key
+
+        SecretKey decryptSymmetric = (SecretKey) AssymetricKeyGenerator.decryptWithPrivate(encryptSymmetric,privateKey);
+
+        return decryptSymmetric;
+    }
+
 }

@@ -60,7 +60,4 @@ public final class GenerateDigest {
         return GenerateDigest.toHexString(GenerateDigest.getSHA3_256(password, salt));
     }
 
-    public static void main(String[] args) {
-
-    }
 }
