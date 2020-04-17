@@ -1,11 +1,23 @@
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 
 public class Login_Register {
 
     //=====================================REGISTER=============================================================//
     public static void register(User user, String password){
-        File register_file = new File("Register_Users");
+        Path path = Paths.get(user.getUsername() + "\\Register_Users");
+
+        try{
+            Files.createDirectories(path);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        File register_file = new File(String.valueOf(path));
+
         ObjectOutputStream Object_out = null;
         FileOutputStream File_out = null;
 
@@ -56,13 +68,12 @@ public class Login_Register {
         }
     }
 
-
     //=====================================LOGIN=============================================================//
-    public static boolean login(String password){
+    public static boolean login(String username, String password){
 
         boolean resultDigests = false;
         try{
-            ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream("Register_Users"));
+            ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream(username + "\\Register_Users"));
 
             while (true){
                 try{
@@ -100,7 +111,7 @@ public class Login_Register {
 
         boolean username_found = false;
         try{
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Register_Users"));
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(username + "\\Register_Users"));
             while (true){
                 try{
                     // Read object from file
@@ -124,26 +135,26 @@ public class Login_Register {
     }
 
     //=====================================SHOW_FILE_VALUES=============================================================//
-    public static void file(){
-        try{
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Register_Users"));
+    //public static void file(){
+    //    try{
+    //        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(user.getUsername() + "/Register_Users"));
 
-            while (true){
-                try {
-                    User tempUser = (User) ois.readObject();
-                    System.out.println("Username is : " + tempUser.toString());
+    //        while (true){
+    //            try {
+    //                User tempUser = (User) ois.readObject();
+    //                System.out.println("Username is : " + tempUser.toString());
 
-                }catch (EOFException ex){ System.out.println("eof"); break;
-                }
-            }
+    //            }catch (EOFException ex){ System.out.println("eof"); break;
+    //            }
+    //        }
 
-        } catch (FileNotFoundException exception) {
-            exception.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+    //    } catch (FileNotFoundException exception) {
+    //        exception.printStackTrace();
+    //    } catch (IOException e) {
+    //        e.printStackTrace();
+    //    } catch (ClassNotFoundException e) {
+    //        e.printStackTrace();
+    //    }
+    //}
 
 }

@@ -1,10 +1,7 @@
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+
 import javax.crypto.SecretKey;
 import java.io.*;
 import java.security.*;
-import java.util.PrimitiveIterator;
 
 public class KeyHandler {
 
